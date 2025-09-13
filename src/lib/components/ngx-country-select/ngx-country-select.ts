@@ -22,7 +22,7 @@ import { CountryModel } from '../../models/country.model';
 import { Countries } from '../../servies/countries';
 
 @Component({
-  selector: 'lib-ngx-country-select',
+  selector: 'ngx-country-select',
   imports: [FormsModule],
   providers: [
     Countries,

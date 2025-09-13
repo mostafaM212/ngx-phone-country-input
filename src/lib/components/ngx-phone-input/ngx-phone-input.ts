@@ -23,7 +23,7 @@ export interface PhoneInputValue {
 }
 
 @Component({
-  selector: 'lib-ngx-phone-input',
+  selector: 'ngx-phone-input',
   imports: [FormsModule],
   providers: [Countries],
   templateUrl: './ngx-phone-input.html',
