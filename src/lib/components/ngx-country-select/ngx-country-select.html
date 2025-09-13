@@ -1,0 +1,100 @@
+<div class="country-select-container"
+  [class.disabled]="isComponentDisabled"
+  [class.open]="isDropdownOpen()"
+  [class.error]="hasError()"
+  (click)="toggleDropdown()"
+  [attr.tabindex]="isComponentDisabled ? -1 : 0"
+  role="combobox"
+  [attr.aria-expanded]="isDropdownOpen()"
+  [attr.aria-disabled]="isComponentDisabled"
+  [attr.aria-invalid]="hasError()">
+
+  <!-- Selected Country Display -->
+  <div class="selected-country">
+    @if (selectedCountry(); as country) {
+      <div class="country-display">
+        @if (showFlag()) {
+          <span class="flag">{{ country.flag }}</span>
+        }
+        <span class="country-name">{{ country.name }}</span>
+        @if (showDialCode()) {
+          <span class="dial-code">({{ country.dialCode }})</span>
+        }
+      </div>
+    } @else {
+      <span class="placeholder" [class.error-placeholder]="hasError()">{{ getPlaceholderText() }}</span>
+    }
+
+    <!-- Clear button -->
+    @if (selectedCountry() && !isComponentDisabled) {
+      <button
+        type="button"
+        class="clear-button"
+        (click)="clearSelection(); $event.stopPropagation()"
+        aria-label="Clear selection">
+        ✕
+      </button>
+    }
+
+    <!-- Dropdown arrow -->
+    <span class="arrow" [class.open]="isDropdownOpen()">
+      ▼
+    </span>
+  </div>
+
+  <!-- Dropdown List -->
+  <div class="dropdown" [class.show]="isDropdownOpen()" (click)="$event.stopPropagation()">
+    <!-- Search Input -->
+    @if (searchable()) {
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search countries..."
+          [(ngModel)]="searchTerm"
+          (input)="filterCountries()"
+          #searchInput
+          [disabled]="isComponentDisabled" />
+      </div>
+    }
+
+    <!-- Countries List -->
+    <div class="countries-list" role="listbox">
+      @if (filteredCountries().length === 0) {
+        <div class="no-results">
+          No countries found
+        </div>
+      } @else {
+        @for (country of filteredCountries(); track country.iso2) {
+          <div
+            class="country-item"
+            [class.selected]="selectedCountry()?.iso2 === country.iso2"
+            (click)="selectCountry(country)"
+            role="option"
+            [attr.aria-selected]="selectedCountry()?.iso2 === country.iso2"
+            tabindex="0">
+            @if (showFlag()) {
+              <span class="flag">{{ country.flag }}</span>
+            }
+            <span class="name">{{ country.name }}</span>
+            @if (showDialCode()) {
+              <span class="dial-code">{{ country.dialCode }}</span>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Backdrop to close dropdown -->
+  @if (isDropdownOpen()) {
+    <div class="backdrop" (click)="closeDropdown()"></div>
+  }
+</div>
+
+<!-- Error Message -->
+@if (showErrorMessage()) {
+  <div class="error-message" role="alert">
+    {{ getErrorMessage() }}
+  </div>
+}
