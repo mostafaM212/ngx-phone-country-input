@@ -32,9 +32,11 @@
 }
 
 .flag {
-  font-size: 18px;
+  width: 24px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
   margin-right: 8px;
-  line-height: 1;
 }
 
 .dial-code {
@@ -142,6 +144,8 @@
 }
 
 .country-item .flag {
+  width: 24px;
+  height: 18px;
   margin-right: 12px;
 }
 
@@ -217,7 +221,4 @@
 .phone-input-container.disabled {
   opacity: 0.6;
   pointer-events: none;
-}
-.flag {
-  font-size: 24px;
 }

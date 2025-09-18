@@ -38,7 +38,7 @@ import { NgxPhoneInput } from "ngx-phone-country-input";
 
 @Component({
   imports: [NgxPhoneInput],
-  template: ` <lib-ngx-phone-input placeholder="Enter phone number" [defaultCountry]="'US'" (valueChange)="onPhoneChange($event)" /> `,
+  template: ` <ngx-phone-input placeholder="Enter phone number" [defaultCountry]="'US'" (valueChange)="onPhoneChange($event)" /> `,
 })
 export class MyComponent {
   onPhoneChange(value: PhoneInputValue) {
@@ -55,7 +55,7 @@ import { NgxCountrySelect } from "ngx-phone-country-input";
 
 @Component({
   imports: [NgxCountrySelect],
-  template: ` <lib-ngx-country-select placeholder="Select country" [preferredCountries]="['US', 'GB', 'CA']" (countryChange)="onCountryChange($event)" /> `,
+  template: ` <ngx-country-select placeholder="Select country" [preferredCountries]="['US', 'GB', 'CA']" (countryChange)="onCountryChange($event)" /> `,
 })
 export class MyComponent {
   onCountryChange(country: CountryModel) {
@@ -74,7 +74,7 @@ import { NgxCountrySelect } from "ngx-phone-country-input";
   imports: [ReactiveFormsModule, NgxCountrySelect],
   template: `
     <form [formGroup]="userForm">
-      <lib-ngx-country-select formControlName="country" placeholder="Select your country" />
+      <ngx-country-select formControlName="country" placeholder="Select your country" />
 
       <button [disabled]="userForm.invalid">Submit</button>
     </form>
@@ -155,7 +155,7 @@ interface CountryModel {
 Components use CSS custom properties for easy theming:
 
 ```css
-lib-ngx-country-select {
+ngx-country-select {
   --border-color: #d1d5db;
   --border-radius: 8px;
   --background: white;

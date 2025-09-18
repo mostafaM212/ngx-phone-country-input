@@ -1,7 +1,7 @@
 <div class="phone-input-container">
   <!-- Country Selector -->
   <div class="country-selector" (click)="toggleDropdown()">
-    <span class="flag">{{ selectedCountry().flag }}</span>
+    <img class="flag" [src]="selectedCountry().flagUrl" [alt]="selectedCountry().name + ' flag'" onerror="this.style.display='none'">
     <span class="dial-code">{{ selectedCountry().dialCode }}</span>
     <span class="arrow" [class.open]="isDropdownOpen()">▼</span>
   </div>
@@ -35,7 +35,7 @@
           [class.selected]="country.iso2 === selectedCountry().iso2"
           (click)="selectCountry(country)"
         >
-          <span class="flag">{{ country.flag }}</span>
+          <img class="flag" [src]="country.flagUrl" [alt]="country.name + ' flag'" onerror="this.style.display='none'">
           <span class="name">{{ country.name }}</span>
           <span class="dial-code">{{ country.dialCode }}</span>
         </div>

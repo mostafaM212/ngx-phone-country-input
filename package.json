@@ -1,6 +1,6 @@
 {
   "name": "ngx-phone-country-input",
-  "version": "0.0.2",
+  "version": "1.0.3",
   "peerDependencies": {
     "@angular/common": "^20.2.0",
     "@angular/core": "^20.2.0"

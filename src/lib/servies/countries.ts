@@ -1,19 +1,12 @@
-import {computed, Injectable, signal} from '@angular/core';
-import {countries} from '../data/countries';
+import { computed, Injectable } from '@angular/core';
+import { countries } from '../data/countries';
 
 @Injectable()
 export class Countries {
-  public readonly countries = computed(()=>{
+  public readonly countries = computed(() => {
     return countries.map(c => ({
       ...c,
-      flag: this.iso2ToFlag(c.iso2),
+      flagUrl: `https://flagcdn.com/24x18/${c.iso2.toLowerCase()}.png`,
     }));
   })
-  iso2ToFlag(iso2: string): string {
-    return iso2
-      .toUpperCase()
-      .split('')
-      .map(char => String.fromCodePoint(127397 + char.charCodeAt(0)))
-      .join('');
-  }
 }

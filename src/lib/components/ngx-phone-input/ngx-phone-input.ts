@@ -1,18 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
-  signal,
-  input,
-  output,
   effect,
   ElementRef,
-  ViewChild,
-  HostListener
+  HostListener,
+  inject,
+  input,
+  output,
+  signal,
+  ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Countries } from '../../servies/countries';
 import { CountryModel } from '../../models/country.model';
+import { Countries } from '../../servies/countries';
 
 export interface PhoneInputValue {
   countryCode: string;
@@ -75,8 +75,8 @@ export class NgxPhoneInput {
   private getDefaultCountry(): CountryModel {
     const defaultIso2 = this.defaultCountry();
     return this.countries().find(c => c.iso2 === defaultIso2) ||
-           this.countries().find(c => c.iso2 === 'US') ||
-           this.countries()[0];
+      this.countries().find(c => c.iso2 === 'US') ||
+      this.countries()[0];
   }
 
   private getFilteredCountries(): CountryModel[] {
@@ -154,13 +154,7 @@ export class NgxPhoneInput {
     // Basic validation - at least 3 digits
     return /^\d{3,}$/.test(number.replace(/\s+/g, ''));
   }
-  iso2ToFlag(iso2: string): string {
-    return iso2
-      .toUpperCase()
-      .split('')
-      .map(char => String.fromCodePoint(127397 + char.charCodeAt(0)))
-      .join('');
-  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;

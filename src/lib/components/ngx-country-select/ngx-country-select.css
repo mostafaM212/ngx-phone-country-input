@@ -67,8 +67,10 @@
 }
 
 .flag {
-  font-size: 20px;
-  line-height: 1;
+  width: 24px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
   flex-shrink: 0;
 }
 
@@ -231,7 +233,8 @@
 }
 
 .country-item .flag {
-  font-size: 18px;
+  width: 24px;
+  height: 18px;
 }
 
 .country-item .name {
