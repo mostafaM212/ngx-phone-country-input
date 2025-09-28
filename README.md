@@ -38,7 +38,13 @@ import { NgxPhoneInput } from "ngx-phone-country-input";
 
 @Component({
   imports: [NgxPhoneInput],
-  template: ` <ngx-phone-input placeholder="Enter phone number" [defaultCountry]="'US'" (valueChange)="onPhoneChange($event)" /> `,
+  template: `
+    <ngx-phone-input
+      placeholder="Enter phone number"
+      [defaultCountry]="'US'"
+      (valueChange)="onPhoneChange($event)"
+    />
+  `,
 })
 export class MyComponent {
   onPhoneChange(value: PhoneInputValue) {
@@ -55,7 +61,13 @@ import { NgxCountrySelect } from "ngx-phone-country-input";
 
 @Component({
   imports: [NgxCountrySelect],
-  template: ` <ngx-country-select placeholder="Select country" [preferredCountries]="['US', 'GB', 'CA']" (countryChange)="onCountryChange($event)" /> `,
+  template: `
+    <ngx-country-select
+      placeholder="Select country"
+      [preferredCountries]="['US', 'GB', 'CA']"
+      (countryChange)="onCountryChange($event)"
+    />
+  `,
 })
 export class MyComponent {
   onCountryChange(country: CountryModel) {
@@ -74,7 +86,10 @@ import { NgxCountrySelect } from "ngx-phone-country-input";
   imports: [ReactiveFormsModule, NgxCountrySelect],
   template: `
     <form [formGroup]="userForm">
-      <ngx-country-select formControlName="country" placeholder="Select your country" />
+      <ngx-country-select
+        formControlName="country"
+        placeholder="Select your country"
+      />
 
       <button [disabled]="userForm.invalid">Submit</button>
     </form>
@@ -99,6 +114,9 @@ export class MyComponent {
 - `disabled: boolean` - Disable the component
 - `defaultCountry: string` - Initial country (ISO2 code)
 - `preferredCountries: string[]` - Countries to show at top
+- `showFlags: boolean` - Show country flags (default: true)
+- `showDialCode: boolean` - Show dial codes (default: true)
+- `searchable: boolean` - Enable search functionality (default: true)
 
 #### Outputs
 
@@ -162,6 +180,50 @@ ngx-country-select {
   --text-color: #111827;
   --focus-color: #3b82f6;
 }
+```
+
+## Recent Improvements
+
+### Enhanced Phone Input Component
+
+The NgxPhoneInput component has been enhanced with new features:
+
+1. **Search Functionality**: Added a search input to the country dropdown that allows users to filter countries by name, dial code, or ISO code.
+
+2. **Configurable Display Options**:
+
+   - `showFlags`: Control whether country flags are displayed (default: true)
+   - `showDialCode`: Control whether dial codes are displayed (default: true)
+   - `searchable`: Control whether the country list is searchable (default: true)
+
+3. **Improved Accessibility**:
+
+   - Added proper ARIA attributes for screen readers
+   - Enhanced keyboard navigation support (Enter, Space, Escape, Arrow keys)
+   - Better focus management and visual indicators
+
+4. **Enhanced UI/UX**:
+   - Consistent styling with the NgxCountrySelect component
+   - Improved responsive design for mobile devices
+   - Better visual feedback and hover effects
+
+### Example Usage with New Features
+
+```typescript
+// Phone input with flags hidden
+<ngx-phone-input
+  [showFlags]="false"
+  placeholder="Enter phone number" />
+
+// Phone input with dial code hidden
+<ngx-phone-input
+  [showDialCode]="false"
+  placeholder="Enter phone number" />
+
+// Phone input without search functionality
+<ngx-phone-input
+  [searchable]="false"
+  placeholder="Enter phone number" />
 ```
 
 ## Development

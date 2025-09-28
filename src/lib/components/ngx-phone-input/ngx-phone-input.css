@@ -2,17 +2,37 @@
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #d1d5db;
+  border: 2px solid #d1d5db;
   border-radius: 8px;
   background-color: white;
   min-height: 44px;
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden to visible */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  outline: none;
+  transition: all 0.2s ease;
+  z-index: 1; /* Added z-index */
 }
 
-.phone-input-container:focus-within {
+.phone-input-container:hover:not(.disabled) {
+  border-color: #9ca3af;
+}
+
+.phone-input-container:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.phone-input-container.open {
+  border-color: #3b82f6;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.phone-input-container.disabled {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .country-selector {
@@ -23,8 +43,11 @@
   border-right: 1px solid #e5e7eb;
   cursor: pointer;
   user-select: none;
-  min-width: 85px;
+  min-width: 120px;
   transition: background-color 0.2s ease;
+  gap: 8px;
+  z-index: 2; /* Added z-index */
+  position: relative; /* Added position */
 }
 
 .country-selector:hover {
@@ -36,13 +59,23 @@
   height: 18px;
   object-fit: cover;
   border-radius: 2px;
-  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.country-name {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dial-code {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 400;
   margin-right: 6px;
 }
 
@@ -50,6 +83,7 @@
   font-size: 10px;
   color: #6b7280;
   transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .arrow.open {
@@ -64,6 +98,8 @@
   font-size: 16px;
   background: transparent;
   color: #111827;
+  z-index: 2; /* Added z-index */
+  position: relative; /* Added position */
 }
 
 .phone-input::placeholder {
@@ -79,10 +115,10 @@
 .dropdown {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  left: -2px;
+  right: -2px;
   background: white;
-  border: 1px solid #d1d5db;
+  border: 2px solid #3b82f6;
   border-top: none;
   border-radius: 0 0 8px 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -90,6 +126,8 @@
   max-height: 300px;
   overflow: hidden;
   display: none;
+  /* Added to ensure dropdown appears above other elements */
+  transform: translateY(0);
 }
 
 .dropdown.show {
@@ -104,11 +142,12 @@
 
 .search-input {
   width: 100%;
-  padding: 4px 6px;
+  padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 14px;
   outline: none;
+  transition: border-color 0.2s ease;
 }
 
 .search-input:focus {
@@ -116,13 +155,15 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
+.search-input:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
 .countries-list {
-  max-height: 200px;
+  max-height: 240px;
   overflow-y: auto;
-  padding: 6px;
-  z-index: 1000;
-  background-color: #f9fafb;
-  position: fixed;
 }
 
 .country-item {
@@ -132,34 +173,56 @@
   cursor: pointer;
   transition: background-color 0.15s ease;
   border-bottom: 1px solid #f3f4f6;
+  gap: 12px;
+  outline: none;
 }
 
 .country-item:hover {
   background-color: #f9fafb;
 }
 
+.country-item:focus {
+  background-color: #eff6ff;
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
 .country-item.selected {
   background-color: #eff6ff;
   color: #1d4ed8;
+  font-weight: 500;
 }
 
 .country-item .flag {
   width: 24px;
   height: 18px;
-  margin-right: 12px;
 }
 
 .country-item .name {
   flex: 1;
   font-size: 14px;
-  color: #374151;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .country-item .dial-code {
   font-size: 12px;
   color: #6b7280;
-  margin-right: 0;
+  margin-left: auto;
   font-weight: 400;
+}
+
+.country-item.selected .dial-code {
+  color: #1d4ed8;
+}
+
+.no-results {
+  padding: 16px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
 }
 
 .backdrop {
@@ -170,6 +233,30 @@
   bottom: 0;
   z-index: 999;
   background: transparent;
+}
+
+/* Custom scrollbar for countries list */
+.countries-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.countries-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.countries-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.countries-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Focus styles for accessibility */
+.phone-input-container:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Responsive design */
@@ -192,33 +279,28 @@
     border-bottom: none;
     border-radius: 8px 8px 0 0;
   }
+
+  .country-selector {
+    min-width: auto;
+  }
 }
 
-/* Custom scrollbar for countries list */
-.countries-list::-webkit-scrollbar {
-  width: 6px;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .phone-input-container {
+    border-width: 2px;
+  }
+
+  .country-item:focus {
+    outline-width: 3px;
+  }
 }
 
-.countries-list::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-.countries-list::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-
-.countries-list::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Focus styles for accessibility */
-.country-item:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: -2px;
-}
-
-.phone-input-container.disabled {
-  opacity: 0.6;
-  pointer-events: none;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .phone-input-container,
+  .arrow,
+  .country-item {
+    transition: none;
+  }
 }

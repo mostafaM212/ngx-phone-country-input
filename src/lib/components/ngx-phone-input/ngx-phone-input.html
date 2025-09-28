@@ -1,8 +1,25 @@
-<div class="phone-input-container">
+<div class="phone-input-container"
+  [class.disabled]="disabled()"
+  [class.open]="isDropdownOpen()"
+  (keydown)="onKeyDown($event)"
+  tabindex="0"
+  role="combobox"
+  [attr.aria-expanded]="isDropdownOpen()"
+  [attr.aria-disabled]="disabled()">
+
   <!-- Country Selector -->
-  <div class="country-selector" (click)="toggleDropdown()">
-    <img class="flag" [src]="selectedCountry().flagUrl" [alt]="selectedCountry().name + ' flag'" onerror="this.style.display='none'">
-    <span class="dial-code">{{ selectedCountry().dialCode }}</span>
+  <div class="country-selector" (click)="toggleDropdown()" role="button" aria-haspopup="listbox">
+    @if (showFlags()) {
+      <img
+        class="flag"
+        [src]="selectedCountry().flagUrl"
+        [alt]="selectedCountry().name + ' flag'"
+        onerror="this.style.display='none'">
+    }
+    <span class="country-name">{{ selectedCountry().name }}</span>
+    @if (showDialCode()) {
+      <span class="dial-code">({{ selectedCountry().dialCode }})</span>
+    }
     <span class="arrow" [class.open]="isDropdownOpen()">▼</span>
   </div>
 
@@ -14,31 +31,55 @@
     [(ngModel)]="phoneNumber"
     (input)="onPhoneNumberChange($event)"
     [disabled]="disabled()"
+    aria-label="Phone number"
   />
 
   <!-- Country Dropdown -->
-  <div class="dropdown" [class.show]="isDropdownOpen()" (click)="$event.stopPropagation()">
-    <div class="search-container">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search countries..."
-        [(ngModel)]="searchTerm"
-        (input)="filterCountries()"
-        #searchInput
-      />
-    </div>
-    <div class="countries-list" >
-      @for (country of filteredCountries(); track country.dialCode) {
-        <div
-          class="country-item"
-          [class.selected]="country.iso2 === selectedCountry().iso2"
-          (click)="selectCountry(country)"
-        >
-          <img class="flag" [src]="country.flagUrl" [alt]="country.name + ' flag'" onerror="this.style.display='none'">
-          <span class="name">{{ country.name }}</span>
-          <span class="dial-code">{{ country.dialCode }}</span>
+  <div class="dropdown" [class.show]="isDropdownOpen()" (click)="$event.stopPropagation()" role="listbox">
+    <!-- Search Container -->
+    @if (searchable()) {
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search countries..."
+          [(ngModel)]="searchTerm"
+          (input)="filterCountries()"
+          #searchInput
+          [disabled]="disabled()"
+          aria-label="Search countries"
+        />
+      </div>
+    }
+
+    <!-- Countries List -->
+    <div class="countries-list">
+      @if (filteredCountries().length === 0) {
+        <div class="no-results">
+          No countries found
         </div>
+      } @else {
+        @for (country of filteredCountries(); track country.dialCode) {
+          <div
+            class="country-item"
+            [class.selected]="country.iso2 === selectedCountry().iso2"
+            (click)="selectCountry(country)"
+            role="option"
+            [attr.aria-selected]="country.iso2 === selectedCountry().iso2"
+            tabindex="0">
+            @if (showFlags()) {
+              <img
+                class="flag"
+                [src]="country.flagUrl"
+                [alt]="country.name + ' flag'"
+                onerror="this.style.display='none'">
+            }
+            <span class="name">{{ country.name }}</span>
+            @if (showDialCode()) {
+              <span class="dial-code">{{ country.dialCode }}</span>
+            }
+          </div>
+        }
       }
     </div>
   </div>

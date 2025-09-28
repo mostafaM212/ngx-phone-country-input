@@ -38,6 +38,9 @@ export class NgxPhoneInput {
   public readonly disabled = input<boolean>(false);
   public readonly defaultCountry = input<string>('US');
   public readonly preferredCountries = input<string[]>([]);
+  public readonly showFlags = input<boolean>(true);
+  public readonly showDialCode = input<boolean>(true);
+  public readonly searchable = input<boolean>(true);
 
   // Outputs
   public readonly valueChange = output<PhoneInputValue>();
@@ -104,11 +107,16 @@ export class NgxPhoneInput {
   }
 
   public toggleDropdown(): void {
+    if (this.disabled()) return;
+
     this.isDropdownOpen.update(open => !open);
-    if (this.isDropdownOpen()) {
+    if (this.isDropdownOpen() && this.searchable()) {
+      // Use a longer timeout to ensure the element is rendered
       setTimeout(() => {
-        this.searchInput?.nativeElement?.focus();
-      }, 100);
+        if (this.searchInput?.nativeElement) {
+          this.searchInput.nativeElement.focus();
+        }
+      }, 150);
     }
   }
 
@@ -160,6 +168,33 @@ export class NgxPhoneInput {
     const target = event.target as HTMLElement;
     if (!target.closest('.phone-input-container')) {
       this.closeDropdown();
+    }
+  }
+
+  @HostListener('keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (this.disabled()) return;
+
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        if (!this.isDropdownOpen()) {
+          event.preventDefault();
+          this.toggleDropdown();
+        }
+        break;
+      case 'Escape':
+        if (this.isDropdownOpen()) {
+          event.preventDefault();
+          this.closeDropdown();
+        }
+        break;
+      case 'ArrowDown':
+        if (!this.isDropdownOpen()) {
+          event.preventDefault();
+          this.toggleDropdown();
+        }
+        break;
     }
   }
 }
